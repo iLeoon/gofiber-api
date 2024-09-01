@@ -1,8 +1,9 @@
-##
+
+https://github.com/user-attachments/assets/93452e78-866d-4b59-a370-23448713d01f
 
 
 # Description
-A REST API in go utilizing the repositpry pattern.
+A Simple REST API in go utilizing the repository pattern.
 
 ## Tools
 - [gofiber/v3](https://github.com/gofiber/fiber) 
@@ -14,3 +15,23 @@ A REST API in go utilizing the repositpry pattern.
 Performing the crud operations on the [northwind](https://github.com/pthom/northwind_psql) database.
 
 
+## Routes
+| Route                | Method |  Description
+|:-------------------:|:------:|:-------------------------:|
+| **/customers**       | GET   | Fetches all the customers  |
+| **/customers/Id**    | GET    | Fetches a customer with Id | 
+| **/customers/create**| POST   | Creates a customer         | 
+| **/customers/update/Id**| PATCH  | Updates a customer         | 
+| **/customers/delete/Id**| DELETE | Deletes a customer         |
+
+
+## Installation
+**1- Clone the repo.**
+
+**2- Navigate to the folder and run `go get`.**
+
+**3- Replace your env variables in `.env` file.**
+
+**4- Run `air` cmd.**
+
+***5- Code your heart out.***
