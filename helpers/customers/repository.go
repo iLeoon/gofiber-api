@@ -46,7 +46,7 @@ func (r *Repository) FindAll() (*[]models.Customer, error) {
 }
 
 func (r *Repository) FindOne(customerId string) (*models.Customer, error) {
-	customer := models.Customer{}
+	customer := &models.Customer{}
 
 	data := r.DB.QueryRow("select customer_id, contact_name, city, country from customers where customer_id = $1", customerId)
 
@@ -61,7 +61,7 @@ func (r *Repository) FindOne(customerId string) (*models.Customer, error) {
 		return nil, err
 	}
 
-	return &customer, nil
+	return customer, nil
 }
 
 func (r *Repository) Create(body *models.Customer) (*models.Customer, error) {
@@ -87,7 +87,7 @@ func (r *Repository) Update(body *models.Customer, customerId string) (*models.C
 		body.Country,
 		customerId,
 	).Scan(&customerId)
-	fmt.Println(customerId)
+
 	if err != nil || err == sql.ErrNoRows {
 		return nil, err
 	}

@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"fmt"
+	"net/http"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/iLeon/gofiber-api/helpers/customers"
 	"github.com/iLeon/gofiber-api/models"
-	"net/http"
 )
 
 func GetCustomers(service customers.CustomerService) fiber.Handler {
@@ -27,7 +27,6 @@ func GetCustomerById(service customers.CustomerService) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		customerId := c.Params("id")
 
-		fmt.Println(customerId)
 		customer, err := service.FetchCustomer(customerId)
 
 		if err != nil {
@@ -39,22 +38,20 @@ func GetCustomerById(service customers.CustomerService) fiber.Handler {
 	}
 }
 
-func CreateCustomer(service customers.CustomerService) fiber.Handler {
+func CreateCustomer(service customers.CustomerService, validator *validator.Validate) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		var customer models.Customer
 
-		validator := validator.New()
-
 		err := c.Bind().Body(&customer)
-
-		if err != nil {
-			c.Status(http.StatusBadRequest)
-			return c.JSON(models.CustomersErrorResponse(err, "Couldn't create a new customer"))
-		}
 
 		if err := validator.Struct(customer); err != nil {
 			c.Status(http.StatusBadRequest)
 			return c.JSON(err.Error())
+		}
+
+		if err != nil {
+			c.Status(http.StatusBadRequest)
+			return c.JSON(models.CustomersErrorResponse(err, "Couldn't create a new customer"))
 		}
 
 		data, err := service.InsertCustomer(&customer)
@@ -68,25 +65,24 @@ func CreateCustomer(service customers.CustomerService) fiber.Handler {
 	}
 }
 
-func UpdateCustomer(service customers.CustomerService) fiber.Handler {
+func UpdateCustomer(service customers.CustomerService, validator *validator.Validate) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		customerId := c.Params("id")
 
 		customer := &models.Customer{
 			CustomerID: customerId,
 		}
-		validator := validator.New()
 
 		err := c.Bind().Body(&customer)
-
-		if err != nil {
-			c.Status(http.StatusBadRequest)
-			return c.JSON(models.CustomersErrorResponse(err, "Couldn't update the specified customer"))
-		}
 
 		if err := validator.Struct(customer); err != nil {
 			c.Status(http.StatusBadRequest)
 			return c.JSON(err.Error())
+		}
+
+		if err != nil {
+			c.Status(http.StatusBadRequest)
+			return c.JSON(models.CustomersErrorResponse(err, "Couldn't update the specified customer"))
 		}
 
 		data, err := service.ChangeCustomer(customer, customerId)
