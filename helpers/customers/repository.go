@@ -81,23 +81,23 @@ func (r *Repository) Create(body *models.Customer) (*models.Customer, error) {
 }
 
 func (r *Repository) Update(body *models.Customer, customerId string) (*models.Customer, error) {
-	_, err := r.DB.Query("update customers set contact_name=$1, city=$2, country=$3 where customer_id=$4",
+	err := r.DB.QueryRow("update customers set contact_name=$1, city=$2, country=$3 where customer_id=$4 RETURNING customer_id",
 		body.ContactName,
 		body.City,
 		body.Country,
 		customerId,
-	)
+	).Scan(&customerId)
 	fmt.Println(customerId)
-	if err != nil {
+	if err != nil || err == sql.ErrNoRows {
 		return nil, err
 	}
 	return body, nil
 }
 
 func (r *Repository) Delete(customerId string) error {
-	_, err := r.DB.Query("delete from customers where customer_id = $1", customerId)
+	err := r.DB.QueryRow("delete from customers WHERE customer_id=$1 RETURNING customer_id", customerId).Scan(&customerId)
 
-	if err != nil {
+	if err == sql.ErrNoRows {
 		return err
 	}
 

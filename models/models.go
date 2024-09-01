@@ -3,14 +3,13 @@ package models
 import "github.com/gofiber/fiber/v3"
 
 type Customer struct {
-	CustomerID  string `json:"customer_id" validate:"required"`
+	CustomerID  string `json:"customer_id" validate:"required,alpha,omitempty,max=4,min=4"`
 	ContactName string `json:"contact_name" validate:"required"`
 	City        string `json:"city" validate:"required"`
 	Country     string `json:"country" validate:"required"`
 }
 
 func CustomersSuccessResponse(data *[]Customer) *fiber.Map {
-
 	return &fiber.Map{
 		"customers": data,
 	}
