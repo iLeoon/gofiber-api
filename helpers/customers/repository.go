@@ -3,6 +3,7 @@ package customers
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/iLeon/gofiber-api/models"
 )
 
@@ -35,7 +36,9 @@ func (r *Repository) FindAll() (*[]models.Customer, error) {
 	for rows.Next() {
 		customer := models.Customer{}
 		err := rows.Scan(&customer.CustomerID, &customer.ContactName, &customer.City, &customer.Country)
-		fmt.Println(err)
+		if err != nil {
+			fmt.Println(err)
+		}
 		customers = append(customers, customer)
 	}
 	return &customers, nil
