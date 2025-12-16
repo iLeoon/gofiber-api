@@ -28,7 +28,7 @@ func Connect() (*sql.DB, error) {
 
 	if err != nil {
 		log.Fatal(err)
-		return nil, fmt.Errorf("Something went wrong while tring to attempt the connection: %w", err)
+		return nil, fmt.Errorf("Something went wrong while trying to connect: %w", err)
 	}
 
 	fmt.Println("Connected successfully to the database")
